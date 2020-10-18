@@ -7,7 +7,9 @@ def perform_ranking(data, classes):
     selector = SelectKBest(score_func=chi2)
     selector.fit(data, classes)
     new_features = [(feature, score)
-                    for mask_value, feature, score in zip(selector.get_support(), data.columns, selector.scores_) if mask_value]
+                    for mask_value, feature, score in
+                    zip(selector.get_support(), data.columns, selector.scores_)
+                    if mask_value]
     return sorted(new_features, key=lambda x: x[1], reverse=True)
 
 
