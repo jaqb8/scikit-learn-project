@@ -3,8 +3,8 @@ from sklearn.feature_selection import chi2
 # from load_data import load_data
 
 
-def perform_ranking(data, classes):
-    selector = SelectKBest(score_func=chi2)
+def perform_ranking(data, classes, k=10):
+    selector = SelectKBest(score_func=chi2, k=k)
     selector.fit(data, classes)
     new_features = [(feature, score)
                     for mask_value, feature, score in

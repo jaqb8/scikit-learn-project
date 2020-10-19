@@ -33,5 +33,15 @@ CLASSES = [
     'mielomonoblastyczna',
     'monoblastyczna',
     'cytoleukemia',
-    'subacute granulomatous'
+    'subacute granulomatous',
+    'granulocytarna',
+    'limfocytarna',
+    'mielomonocytarna',
+    'monocytarna',
+    'chłoniak limfatyczny białaczka',
+    'plazmocytowa',
+    'wielokapliarnokomórkowa',
+    'eozynofilowa',
+    'bazofilowa',
+    'białaczka komórek wielojądrzastych'
 ]
