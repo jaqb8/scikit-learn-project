@@ -1,6 +1,6 @@
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import chi2
-# from load_data import load_data
+from load_data import load_data
 
 
 def perform_ranking(data, classes, k=10):
@@ -16,6 +16,7 @@ def perform_ranking(data, classes, k=10):
 def print_ranking(ranking):
     for idx, rank in enumerate(ranking):
         print(f'{idx+1}. {rank[0]}: {rank[1]}')
+
 
 # data, classes = load_data('./data_csv.csv')
 # print(data.dtypes)
