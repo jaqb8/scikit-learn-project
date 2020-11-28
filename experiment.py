@@ -6,15 +6,16 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score
 from sklearn.base import clone
 import numpy as np
+import sys
 
 
 x, y = load_data('./data_csv.csv')
 ranking = perform_ranking(x, y)
+np.set_printoptions(threshold=sys.maxsize)
 
 clfs = dict()
 clfs_names = ['euc_n_1', 'euc_n_5', 'euc_n_10', 'man_n_1', 'man_n_5', 'man_n_10']
 neighbors = [1, 5, 10, 1, 5, 10]
-no_of_features = range(1, 11)
 clfs_keys = ['clf', 'features']
 for idx, (n, clf_name) in enumerate(zip(neighbors, clfs_names)):
     clf = KNeighborsClassifier(n_neighbors=n) if idx < 3 else KNeighborsClassifier(n_neighbors=n, metric='manhattan')
@@ -45,4 +46,4 @@ std = np.std(scores, axis=1)
 for clf_id, clf_name in enumerate(clfs):
     print('{}: {} ({})'.format(clf_name, mean[clf_id], std[clf_id]))
 
-np.save('results/results_matrix', scores)
+np.save('results/results_matrix_20features', scores)
