@@ -6,15 +6,15 @@ from tabulate import tabulate
 
 class Stats:
 
-    def __init__(self, file_path):
-        self.scores = np.load(file_path)
+    def __init__(self, scores):
+        self.scores = scores
         self.clfs = {
-            'kNN_euc_1': KNeighborsClassifier(n_neighbors=1),
-            'kNN_euc_2': KNeighborsClassifier(n_neighbors=5),
-            'kNN_euc_3': KNeighborsClassifier(n_neighbors=10),
-            'kNN_man_1': KNeighborsClassifier(n_neighbors=1, metric='manhattan'),
-            'kNN_man_2': KNeighborsClassifier(n_neighbors=5, metric='manhattan'),
-            'kNN_man_3': KNeighborsClassifier(n_neighbors=10, metric='manhattan')
+            'euc_n1': KNeighborsClassifier(n_neighbors=1),
+            'euc_n5': KNeighborsClassifier(n_neighbors=5),
+            'euc_n10': KNeighborsClassifier(n_neighbors=10),
+            'man_n1': KNeighborsClassifier(n_neighbors=1, metric='manhattan'),
+            'man_n5': KNeighborsClassifier(n_neighbors=5, metric='manhattan'),
+            'man_n10': KNeighborsClassifier(n_neighbors=10, metric='manhattan')
         }
         self.headers = list(self.clfs.keys())
         self.names_column = np.array([[key] for key in self.clfs.keys()])
@@ -45,7 +45,7 @@ class Stats:
         advantage = self.get_advantage()
         advantage_table = tabulate(np.concatenate(
             (self.names_column, advantage), axis=1), self.headers)
-        print("Advantage:\n", advantage_table)
+        print("Advantage:\n", advantage_table, "\n")
 
     def get_significance(self):
         significance = np.zeros((len(self.clfs), len(self.clfs)))
@@ -56,7 +56,7 @@ class Stats:
         significance = self.get_significance()
         significance_table = tabulate(np.concatenate(
             (self.names_column, significance), axis=1), self.headers)
-        print("Statistical significance (alpha = 0.05):\n", significance_table)
+        print("Statistical significance (alpha = 0.05):\n", significance_table, "\n")
 
     def print_stat_better(self):
         advantage = self.get_advantage()
@@ -64,13 +64,18 @@ class Stats:
         stat_better = significance * advantage
         stat_better_table = tabulate(np.concatenate(
             (self.names_column, stat_better), axis=1), self.headers)
-        print("Statistically significantly better:\n", stat_better_table)
+        print("Statistically significantly better:\n", stat_better_table, "\n")
 
 
-for i in range(10):
+scores = np.load('results/results_matrix_20features.npy')
+for i in range(20):
+    scores_to_process = np.zeros((6, 10))
+    for idx, j in enumerate(range(0, 120, 20)):
+        scores_to_process[idx] = scores[i + j]
+
     print('-' * 100)
-    print(f'FILE: results_{i}\n\n')
-    stats = Stats(f'results/results_{i}.npy')
+    print(f'Stats for clfs with {i+1} features\n\n')
+    stats = Stats(scores_to_process)
     stats.print_t_statistic()
     stats.print_p_value()
     stats.print_advantage_table()
