@@ -26,14 +26,14 @@ class Stats:
                 self.t_statistic[i, j], self.p_value[i, j] = ttest_ind(self.scores[i],
                                                                        self.scores[j])
 
-    def print_t_statistic(self):
+    def print_t_statistic(self, format='simple'):
         t_statistic_table = np.concatenate((self.names_column, self.t_statistic), axis=1)
-        t_statistic_table = tabulate(t_statistic_table, self.headers, floatfmt=".2f")
+        t_statistic_table = tabulate(t_statistic_table, self.headers, floatfmt=".2f", tablefmt=format)
         print("t-statistic:\n", t_statistic_table, "\n")
 
-    def print_p_value(self):
+    def print_p_value(self, format='simple'):
         p_value_table = np.concatenate((self.names_column, self.p_value), axis=1)
-        p_value_table = tabulate(p_value_table, self.headers, floatfmt=".2f")
+        p_value_table = tabulate(p_value_table, self.headers, floatfmt=".2f", tablefmt=format)
         print("p-value:\n", p_value_table, "\n")
 
     def get_advantage(self):
@@ -41,10 +41,10 @@ class Stats:
         advantage[self.t_statistic > 0] = 1
         return advantage
 
-    def print_advantage_table(self):
+    def print_advantage_table(self, format='simple'):
         advantage = self.get_advantage()
         advantage_table = tabulate(np.concatenate(
-            (self.names_column, advantage), axis=1), self.headers)
+            (self.names_column, advantage), axis=1), self.headers, tablefmt=format)
         print("Advantage:\n", advantage_table, "\n")
 
     def get_significance(self):
@@ -52,22 +52,23 @@ class Stats:
         significance[self.p_value <= self.alfa] = 1
         return significance
 
-    def print_significance_table(self):
+    def print_significance_table(self, format='simple'):
         significance = self.get_significance()
         significance_table = tabulate(np.concatenate(
-            (self.names_column, significance), axis=1), self.headers)
+            (self.names_column, significance), axis=1), self.headers, tablefmt=format)
         print("Statistical significance (alpha = 0.05):\n", significance_table, "\n")
 
-    def print_stat_better(self):
+    def print_stat_better(self, format='simple'):
         advantage = self.get_advantage()
         significance = self.get_significance()
         stat_better = significance * advantage
         stat_better_table = tabulate(np.concatenate(
-            (self.names_column, stat_better), axis=1), self.headers)
+            (self.names_column, stat_better), axis=1), self.headers, tablefmt=format)
         print("Statistically significantly better:\n", stat_better_table, "\n")
 
 
 scores = np.load('results/results_matrix_20features.npy')
+format = 'latex'
 for i in range(20):
     scores_to_process = np.zeros((6, 10))
     for idx, j in enumerate(range(0, 120, 20)):
@@ -76,10 +77,10 @@ for i in range(20):
     print('-' * 100)
     print(f'Stats for clfs with {i+1} features\n\n')
     stats = Stats(scores_to_process)
-    stats.print_t_statistic()
-    stats.print_p_value()
-    stats.print_advantage_table()
-    stats.print_significance_table()
-    stats.print_stat_better()
+    stats.print_t_statistic(format=format)
+    stats.print_p_value(format=format)
+    stats.print_advantage_table(format=format)
+    stats.print_significance_table(format=format)
+    stats.print_stat_better(format=format)
     print('-' * 100)
     print('\n\n')
