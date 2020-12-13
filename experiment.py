@@ -28,7 +28,6 @@ n_repeats = 2
 rskf = RepeatedStratifiedKFold(
     n_splits=n_splits, n_repeats=n_repeats, random_state=42)
 scores = np.zeros((len(clfs), n_splits * n_repeats))
-print(scores)
 
 for clf_id, clf_name in enumerate(clfs):
     selected_features = x[clfs[clf_name]['features']]
@@ -38,7 +37,6 @@ for clf_id, clf_name in enumerate(clfs):
         y_pred = clf.predict(selected_features.iloc[test])
         scores[clf_id, fold_id] = accuracy_score(y[test], y_pred)
 
-print(scores)
 
 mean = np.mean(scores, axis=1)
 std = np.std(scores, axis=1)
